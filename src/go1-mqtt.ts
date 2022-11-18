@@ -5,6 +5,8 @@ export class Go1MQTT {
   floats: Float32Array = new Float32Array(4);
   endpoint: string = "mqtt://192.168.12.1";
   connected: boolean = false;
+  movementTopic: string;
+  ledTopic: string;
 
   constructor() {
     console.log("go1 mqtt constructor");
@@ -13,6 +15,8 @@ export class Go1MQTT {
     this.floats[1] = 0; // turn left (neg) and  right (pos)
     this.floats[2] = 0;
     this.floats[3] = 0; // walk backward (neg) and forward (pos)
+    this.movementTopic = "controller/stick";
+    this.ledTopic = "programming/code";
   }
 
   connect = () => {
@@ -41,7 +45,7 @@ export class Go1MQTT {
     this.floats[3] = backwardForward;
   };
 
-  sendCommand = async (lengthOfTime: number) => {
+  sendMovementCommand = async (lengthOfTime: number) => {
     let interval: ReturnType<typeof setInterval>;
 
     let zero: Float32Array = new Float32Array(4);
@@ -52,7 +56,7 @@ export class Go1MQTT {
 
     // Reset speed from the buffer for a few
     this.client?.publish(
-      "controller/stick",
+      this.movementTopic,
       new Uint8Array(zero.buffer) as Buffer,
       {
         qos: 0,
@@ -62,7 +66,7 @@ export class Go1MQTT {
     interval = setInterval(() => {
       console.log(`sending command ${this.floats}`);
       this.client?.publish(
-        "controller/stick",
+        this.movementTopic,
         new Uint8Array(this.floats.buffer) as Buffer,
         {
           qos: 0,
@@ -77,5 +81,15 @@ export class Go1MQTT {
         clearInterval(interval);
       }, lengthOfTime);
     });
+  };
+
+  sendLEDCommand = (r: number, g: number, b: number) => {
+    this.client?.publish(
+      this.ledTopic,
+      `child_conn.send('change_light(${r},${g},${b})')`,
+      {
+        qos: 0,
+      }
+    );
   };
 }
