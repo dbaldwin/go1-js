@@ -1,0 +1,26 @@
+{
+  "name": "go1-js",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "ts-node ./src/index.ts"
+  },
+  "keywords": [
+    "unitree",
+    "go1"
+  ],
+  "author": "Dennis Baldwin, DroneBlocks",
+  "license": "MIT",
+  "dependencies": {
+    "mqtt": "^4.3.7"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "@types/ws": "^8.5.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3"
+  }
+}
