@@ -29,7 +29,7 @@ export class Go1 {
    * @param lengthOfTime - Length of time for movement in milliseconds
    */
   goForward = async (speed: number, lengthOfTime: number) => {
-    this.mqtt.updateSpeed(0, 0, speed);
+    this.mqtt.updateSpeed(0, 0, 0, speed);
     await this.mqtt.sendMovementCommand(lengthOfTime);
   };
 
@@ -40,7 +40,7 @@ export class Go1 {
    * @param lengthOfTime - Length of time for movement in milliseconds
    */
   goBackward = async (speed: number, lengthOfTime: number) => {
-    this.mqtt.updateSpeed(0, 0, speed * -1.0);
+    this.mqtt.updateSpeed(0, 0, 0, speed * -1.0);
     await this.mqtt.sendMovementCommand(lengthOfTime);
   };
 
@@ -51,7 +51,7 @@ export class Go1 {
    * @param lengthOfTime - Length of time for movement in milliseconds
    */
   goLeft = async (speed: number, lengthOfTime: number) => {
-    this.mqtt.updateSpeed(speed * -1, 0, 0);
+    this.mqtt.updateSpeed(speed * -1, 0, 0, 0);
     await this.mqtt.sendMovementCommand(lengthOfTime);
   };
 
@@ -62,9 +62,11 @@ export class Go1 {
    * @param lengthOfTime - Length of time for movement in milliseconds
    */
   goRight = async (speed: number, lengthOfTime: number) => {
-    this.mqtt.updateSpeed(speed, 0, 0);
+    this.mqtt.updateSpeed(speed, 0, 0, 0);
     await this.mqtt.sendMovementCommand(lengthOfTime);
   };
+
+  //go = async();
 
   /**
    * Rotate left based on speed and time
@@ -73,7 +75,7 @@ export class Go1 {
    * @param lengthOfTime - Length of time for movement in milliseconds
    */
   turnLeft = async (speed: number, lengthOfTime: number) => {
-    this.mqtt.updateSpeed(0, speed * -1, 0);
+    this.mqtt.updateSpeed(0, speed * -1, 0, 0);
     await this.mqtt.sendMovementCommand(lengthOfTime);
   };
 
@@ -84,7 +86,95 @@ export class Go1 {
    * @param lengthOfTime - Length of time for movement in milliseconds
    */
   turnRight = async (speed: number, lengthOfTime: number) => {
-    this.mqtt.updateSpeed(0, speed, 0);
+    this.mqtt.updateSpeed(0, speed, 0, 0);
+    await this.mqtt.sendMovementCommand(lengthOfTime);
+  };
+
+  /**
+   * Extend up - requires setMode(Go1Mode.stand) to be set
+   *
+   * @param speed - A value from 0 to 1
+   * @param lengthOfTime - Length of time for movement in milliseconds
+   */
+  extendUp = async (speed: number, lengthOfTime: number) => {
+    this.mqtt.updateSpeed(0, 0, 0, speed);
+    await this.mqtt.sendMovementCommand(lengthOfTime);
+  };
+
+  /**
+   * Squat up - requires setMode(Go1Mode.stand) to be set
+   *
+   * @param speed - A value from 0 to 1
+   * @param lengthOfTime - Length of time for movement in milliseconds
+   */
+  squatDown = async (speed: number, lengthOfTime: number) => {
+    this.mqtt.updateSpeed(0, 0, 0, speed * -1);
+    await this.mqtt.sendMovementCommand(lengthOfTime);
+  };
+
+  /**
+   * Leans body to the left - requires setMode(Go1Mode.stand) to be set
+   *
+   * @param speed - A value from 0 to 1
+   * @param lengthOfTime - Length of time for movement in milliseconds
+   */
+  leanLeft = async (speed: number, lengthOfTime: number) => {
+    this.mqtt.updateSpeed(speed * -1, 0, 0, 0);
+    await this.mqtt.sendMovementCommand(lengthOfTime);
+  };
+
+  /**
+   * Leans body to the right - requires setMode(Go1Mode.stand) to be set
+   *
+   * @param speed - A value from 0 to 1
+   * @param lengthOfTime - Length of time for movement in milliseconds
+   */
+  leanRight = async (speed: number, lengthOfTime: number) => {
+    this.mqtt.updateSpeed(speed, 0, 0, 0);
+    await this.mqtt.sendMovementCommand(lengthOfTime);
+  };
+
+  /**
+   * Twists body to the left - requires setMode(Go1Mode.stand) to be set
+   *
+   * @param speed - A value from 0 to 1
+   * @param lengthOfTime - Length of time for movement in milliseconds
+   */
+  twistLeft = async (speed: number, lengthOfTime: number) => {
+    this.mqtt.updateSpeed(0, speed * -1, 0, 0);
+    await this.mqtt.sendMovementCommand(lengthOfTime);
+  };
+
+  /**
+   * Twists body to the right - requires setMode(Go1Mode.stand) to be set
+   *
+   * @param speed - A value from 0 to 1
+   * @param lengthOfTime - Length of time for movement in milliseconds
+   */
+  twistRight = async (speed: number, lengthOfTime: number) => {
+    this.mqtt.updateSpeed(0, speed, 0, 0);
+    await this.mqtt.sendMovementCommand(lengthOfTime);
+  };
+
+  /**
+   * Leans body down - requires setMode(Go1Mode.stand) to be set
+   *
+   * @param speed - A value from 0 to 1
+   * @param lengthOfTime - Length of time for movement in milliseconds
+   */
+  lookDown = async (speed: number, lengthOfTime: number) => {
+    this.mqtt.updateSpeed(0, 0, speed * -1, 0);
+    await this.mqtt.sendMovementCommand(lengthOfTime);
+  };
+
+  /**
+   * Leans body up - requires setMode(Go1Mode.stand) to be set
+   *
+   * @param speed - A value from 0 to 1
+   * @param lengthOfTime - Length of time for movement in milliseconds
+   */
+  lookUp = async (speed: number, lengthOfTime: number) => {
+    this.mqtt.updateSpeed(0, 0, speed, 0);
     await this.mqtt.sendMovementCommand(lengthOfTime);
   };
 
@@ -128,3 +218,18 @@ export class Go1 {
     this.mqtt.sendModeCommand(mode);
   };
 }
+
+/**
+ * stand
+ * 0, 0, 0, 1 = stand tall (W)
+ * 0, 0, 0, -1 = stand short (S)
+ *
+ * -1, 0, 0, 0 - tilt left (A)
+ * 1, 0, 0, 0 - tilt right (D)
+ *
+ * 0, -1, 0, 0 - look left (left arrow)
+ * 0, 1, 0, 0 - look right (right arrow)
+ *
+ * 0, 0, -1, 0 - look down (up arrow)
+ * 0, 0, 1, 0 - look up (down arrow)
+ */

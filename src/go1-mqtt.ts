@@ -9,6 +9,7 @@ export class Go1MQTT {
   movementTopic: string;
   ledTopic: string;
   modeTopic: string;
+  publishFrequency: number;
 
   constructor() {
     this.client = null;
@@ -19,6 +20,7 @@ export class Go1MQTT {
     this.movementTopic = "controller/stick";
     this.ledTopic = "programming/code";
     this.modeTopic = "controller/action";
+    this.publishFrequency = 100; // Send MQTT message every 100ms
   }
 
   connect = () => {
@@ -38,11 +40,12 @@ export class Go1MQTT {
   updateSpeed = (
     leftRight: number,
     turnLeftRight: number,
+    lookUpDown: number, // Only for stand mode
     backwardForward: number
   ) => {
     this.floats[0] = leftRight;
     this.floats[1] = turnLeftRight;
-    this.floats[2] = 0;
+    this.floats[2] = lookUpDown;
     this.floats[3] = backwardForward;
   };
 
@@ -73,7 +76,7 @@ export class Go1MQTT {
           qos: 0,
         }
       );
-    }, 500);
+    }, this.publishFrequency);
 
     // Stop sending after lengthOfTime
     return new Promise<void>((resolve) => {
