@@ -1,4 +1,5 @@
 import * as mqtt from "mqtt";
+import { Go1Mode } from "./go1";
 
 export class Go1MQTT {
   client: mqtt.MqttClient | null;
@@ -7,9 +8,9 @@ export class Go1MQTT {
   connected: boolean = false;
   movementTopic: string;
   ledTopic: string;
+  modeTopic: string;
 
   constructor() {
-    console.log("go1 mqtt constructor");
     this.client = null;
     this.floats[0] = 0; // walk left (neg) and right (pos)
     this.floats[1] = 0; // turn left (neg) and  right (pos)
@@ -17,6 +18,7 @@ export class Go1MQTT {
     this.floats[3] = 0; // walk backward (neg) and forward (pos)
     this.movementTopic = "controller/stick";
     this.ledTopic = "programming/code";
+    this.modeTopic = "controller/action";
   }
 
   connect = () => {
@@ -29,7 +31,6 @@ export class Go1MQTT {
 
     this.client.on("connect", () => {
       console.log("connected");
-      this.client?.publish("controller/action", "walk", { qos: 1 });
       this.connected = true;
     });
   };
@@ -91,5 +92,11 @@ export class Go1MQTT {
         qos: 0,
       }
     );
+  };
+
+  sendModeCommand = (mode: Go1Mode) => {
+    this.client?.publish(this.modeTopic, mode, {
+      qos: 1,
+    });
   };
 }

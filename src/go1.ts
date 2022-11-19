@@ -1,5 +1,19 @@
 import { Go1MQTT } from "./go1-mqtt";
 
+export enum Go1Mode {
+  dance1 = "dance1",
+  dance2 = "dance2",
+  straightHand1 = "straightHand1",
+  damping = "damping",
+  standUp = "standUp",
+  standDown = "standDown",
+  recoverStand = "recoverStand",
+  stand = "stand",
+  walk = "walk",
+  run = "run",
+  climb = "climb",
+}
+
 export class Go1 {
   mqtt: Go1MQTT;
 
@@ -92,5 +106,25 @@ export class Go1 {
    */
   setLedColor = (r: number, g: number, b: number) => {
     this.mqtt.sendLEDCommand(r, g, b);
+  };
+
+  /**
+   * Set Go1's operation mode
+   *
+   * @param mode
+   * Go1Mode.dance1
+   * Go1Mode.dance2
+   * Go1Mode.straightHand1
+   * Go1Mode.damping
+   * Go1Mode.standUp,
+   * Go1Mode.standDown
+   * Go1Mode.recoverStand
+   * Go1Mode.stand
+   * Go1Mode.walk
+   * Go1Mode.run
+   * Go1Mode.climb
+   */
+  setMode = (mode: Go1Mode) => {
+    this.mqtt.sendModeCommand(mode);
   };
 }
