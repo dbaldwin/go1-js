@@ -43,10 +43,10 @@ export class Go1MQTT {
     lookUpDown: number, // Only for stand mode
     backwardForward: number
   ) => {
-    this.floats[0] = leftRight;
-    this.floats[1] = turnLeftRight;
-    this.floats[2] = lookUpDown;
-    this.floats[3] = backwardForward;
+    this.floats[0] = this.clamp(leftRight);
+    this.floats[1] = this.clamp(turnLeftRight);
+    this.floats[2] = this.clamp(lookUpDown);
+    this.floats[3] = this.clamp(backwardForward);
   };
 
   sendMovementCommand = async (lengthOfTime: number) => {
@@ -101,5 +101,15 @@ export class Go1MQTT {
     this.client?.publish(this.modeTopic, mode, {
       qos: 1,
     });
+  };
+
+  clamp = (speed: number) => {
+    if (speed < -1.0) {
+      return -1.0;
+    } else if (speed > 1.0) {
+      return 1.0;
+    } else {
+      return speed;
+    }
   };
 }

@@ -66,7 +66,29 @@ export class Go1 {
     await this.mqtt.sendMovementCommand(lengthOfTime);
   };
 
-  //go = async();
+  /**
+   *
+   * Go left/right, turn left/right, and go forward/backward based on speed and time
+   *
+   * @param leftRightSpeed - A value from -1 to 1
+   * @param turnLeftRightSpeed - A value from -1 to 1
+   * @param backwardForwardSpeed - A value from -1 to 1
+   * @param lengthOfTime - Length of time for movement in milliseconds
+   */
+  go = async (
+    leftRightSpeed: number,
+    turnLeftRightSpeed: number,
+    backwardForwardSpeed: number,
+    lengthOfTime: number
+  ) => {
+    this.mqtt.updateSpeed(
+      leftRightSpeed,
+      turnLeftRightSpeed,
+      0,
+      backwardForwardSpeed
+    );
+    await this.mqtt.sendMovementCommand(lengthOfTime);
+  };
 
   /**
    * Rotate left based on speed and time
