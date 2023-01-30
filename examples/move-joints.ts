@@ -10,6 +10,7 @@ async function run() {
     console.log("squat down");
     await dog.squatDown(1, 2000);
   }
+  dog.disconnect();
   console.log("done!");
 }
 
