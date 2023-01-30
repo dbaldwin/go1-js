@@ -4,7 +4,8 @@ import { Go1Mode } from "./go1";
 export class Go1MQTT {
   client: mqtt.MqttClient | null;
   floats: Float32Array = new Float32Array(4);
-  endpoint: string = "mqtt://192.168.12.1";
+  //endpoint: string = "mqtt://192.168.12.1";
+  endpoint: string = "mqtt://192.168.86.41";
   connected: boolean = false;
   movementTopic: string;
   ledTopic: string;
@@ -24,8 +25,6 @@ export class Go1MQTT {
   }
 
   connect = () => {
-    console.log("connecting");
-
     this.client = mqtt.connect(this.endpoint, {
       clientId: Math.random().toString(16).substring(2, 8),
       keepalive: 5,
@@ -35,6 +34,14 @@ export class Go1MQTT {
       console.log("connected");
       this.connected = true;
     });
+
+    this.client.on("close", () => {
+      this.connected = false;
+    });
+  };
+
+  disconnect = () => {
+    this.client?.end();
   };
 
   updateSpeed = (

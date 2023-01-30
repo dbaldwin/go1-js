@@ -239,6 +239,13 @@ export class Go1 {
   setMode = (mode: Go1Mode) => {
     this.mqtt.sendModeCommand(mode);
   };
+
+  /**
+   * Disconnect from the MQTT broker
+   */
+  disconnect = () => {
+    this.mqtt.disconnect();
+  };
 }
 
 /**
