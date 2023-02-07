@@ -1,4 +1,4 @@
-import { Go1MQTT } from "./go1-mqtt";
+import { Go1MQTT } from "./mqtt/go1-mqtt";
 
 export enum Go1Mode {
   dance1 = "dance1",
@@ -20,6 +20,7 @@ export class Go1 {
   constructor() {
     this.mqtt = new Go1MQTT();
     this.mqtt.connect();
+    this.mqtt.subscribe();
   }
 
   /**

@@ -1,15 +1,20 @@
 import * as mqtt from "mqtt";
-import { Go1Mode } from "./go1";
+import { MqttData } from "./data";
+import { Go1Mode } from "../go1";
+import { getMqttDataCopy } from "./data";
+import messageHandler from "./message-handler";
 
 export class Go1MQTT {
   client: mqtt.MqttClient | null;
   floats: Float32Array = new Float32Array(4);
   endpoint: string = "mqtt://192.168.12.1";
+  //endpoint: string = "mqtt://192.168.86.41";
   connected: boolean = false;
   movementTopic: string;
   ledTopic: string;
   modeTopic: string;
   publishFrequency: number;
+  data: MqttData;
 
   constructor() {
     this.client = null;
@@ -21,6 +26,7 @@ export class Go1MQTT {
     this.ledTopic = "programming/code";
     this.modeTopic = "controller/action";
     this.publishFrequency = 100; // Send MQTT message every 100ms
+    this.data = getMqttDataCopy();
   }
 
   connect = () => {
@@ -35,6 +41,24 @@ export class Go1MQTT {
       console.log("connected");
       this.connected = true;
     });
+
+    this.client.on("close", () => {
+      this.connected = false;
+    });
+
+    this.client.on("message", (topic, message) => {
+      messageHandler(topic, message, this.data);
+    });
+  };
+
+  subscribe = () => {
+    console.log("subscribing");
+    this.client?.subscribe("bms/state");
+    //this.client?.subscribe("slam/position");
+  };
+
+  disconnect = () => {
+    this.client?.end();
   };
 
   updateSpeed = (
