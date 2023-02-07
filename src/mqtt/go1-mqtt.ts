@@ -14,7 +14,7 @@ export class Go1MQTT {
   ledTopic: string;
   modeTopic: string;
   publishFrequency: number;
-  data: MqttData;
+  robotState: MqttData;
 
   constructor() {
     this.client = null;
@@ -26,7 +26,7 @@ export class Go1MQTT {
     this.ledTopic = "programming/code";
     this.modeTopic = "controller/action";
     this.publishFrequency = 100; // Send MQTT message every 100ms
-    this.data = getMqttDataCopy();
+    this.robotState = getMqttDataCopy();
   }
 
   connect = () => {
@@ -46,15 +46,16 @@ export class Go1MQTT {
       this.connected = false;
     });
 
+    // Handle messages that come from various topics
     this.client.on("message", (topic, message) => {
-      messageHandler(topic, message, this.data);
+      messageHandler(topic, message, this.robotState);
+      console.log(this.robotState);
     });
   };
 
+  // Subscribe to topics for updates
   subscribe = () => {
-    console.log("subscribing");
-    this.client?.subscribe("bms/state");
-    //this.client?.subscribe("slam/position");
+    this.client?.subscribe(["bms/state", "firmware/version"]);
   };
 
   disconnect = () => {
