@@ -1,11 +1,11 @@
-import { MqttData } from "./data";
+import { Go1State } from "./go1-state";
 import { SubTopic } from "./topics";
 import bmsReceivers from "./receivers/bms-receiver";
 import robotReceivers from "./receivers/robot-receiver";
 
 type Receivers = {
   [key in SubTopic]: (
-    data: MqttData,
+    data: Go1State,
     message: Buffer,
     dataView: DataView
   ) => void;
@@ -19,7 +19,7 @@ const messageReceivers: Receivers = {
 export default function messageHandler(
   topic: string,
   message: Buffer,
-  data: MqttData
+  data: Go1State
 ) {
   const msgTopic = topic as SubTopic;
   const dataView = new DataView(

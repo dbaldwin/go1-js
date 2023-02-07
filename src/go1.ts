@@ -24,6 +24,13 @@ export class Go1 {
   }
 
   /**
+   * @returns Go1 current state
+   */
+  getState = () => {
+    return this.mqtt.getState();
+  };
+
+  /**
    * Move forward based on speed and time
    *
    * @param speed - A value from 0 to 1

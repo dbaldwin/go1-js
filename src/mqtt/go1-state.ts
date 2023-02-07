@@ -1,6 +1,6 @@
 export type AiMode = "MNFH" | "cam1" | "cam2" | "cam3" | "cam4" | "cam5";
 
-export interface MqttData {
+export interface Go1State {
   mqttConnected: boolean;
   managerOn: boolean;
   controllerOn: boolean;
@@ -37,7 +37,7 @@ export interface MqttData {
   };
 }
 
-const data: MqttData = {
+const data: Go1State = {
   mqttConnected: false,
   managerOn: false,
   controllerOn: false,
@@ -76,6 +76,6 @@ const data: MqttData = {
 
 const dataCopy = JSON.stringify(data);
 
-export const getMqttDataCopy = () => {
-  return JSON.parse(dataCopy) as MqttData;
+export const getGo1StateCopy = () => {
+  return JSON.parse(dataCopy) as Go1State;
 };

@@ -1,9 +1,9 @@
-import { MqttData } from "../data";
+import { Go1State } from "../go1-state";
 import { BmsSubTopic } from "../topics";
 
 type Receivers = {
   [key in BmsSubTopic]: (
-    data: MqttData,
+    data: Go1State,
     message: Buffer,
     dataView: DataView
   ) => void;
