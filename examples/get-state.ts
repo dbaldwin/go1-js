@@ -20,7 +20,7 @@ function handleBattery(state: Go1State): void {
 async function main() {
   dog = new Go1();
 
-  dog.mqtt.on("go1StateChange", (state) => {
+  dog.on("go1StateChange", (state) => {
     handleBattery(state);
   });
 

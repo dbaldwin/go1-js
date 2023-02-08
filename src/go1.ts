@@ -1,4 +1,6 @@
+import { EventEmitter } from "events";
 import { Go1MQTT } from "./mqtt/go1-mqtt";
+import { Go1State, getGo1StateCopy } from "./mqtt/go1-state";
 
 export enum Go1Mode {
   dance1 = "dance1",
@@ -14,14 +16,25 @@ export enum Go1Mode {
   climb = "climb",
 }
 
-export class Go1 {
+export class Go1 extends EventEmitter {
   mqtt: Go1MQTT;
+  go1State: Go1State;
 
   constructor() {
-    this.mqtt = new Go1MQTT();
+    super();
+    this.mqtt = new Go1MQTT(this);
     this.mqtt.connect();
     this.mqtt.subscribe();
+    this.go1State = getGo1StateCopy();
   }
+
+  /**
+   *
+   * @param state
+   */
+  publishState = (state: Go1State) => {
+    this.emit("go1StateChange", state);
+  };
 
   /**
    * Move forward based on speed and time

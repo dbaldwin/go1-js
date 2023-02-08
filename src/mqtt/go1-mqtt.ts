@@ -1,10 +1,10 @@
-import { EventEmitter } from "events";
 import * as mqtt from "mqtt";
 import { Go1State, getGo1StateCopy } from "./go1-state";
-import { Go1Mode } from "../go1";
+import { Go1, Go1Mode } from "../go1";
 import messageHandler from "./message-handler";
 
-export class Go1MQTT extends EventEmitter {
+export class Go1MQTT {
+  go1: Go1;
   client: mqtt.MqttClient | null;
   floats: Float32Array = new Float32Array(4);
   endpoint: string = "mqtt://192.168.12.1";
@@ -16,8 +16,8 @@ export class Go1MQTT extends EventEmitter {
   publishFrequency: number;
   go1State: Go1State;
 
-  constructor() {
-    super();
+  constructor(go1: Go1) {
+    this.go1 = go1;
     this.client = null;
     this.floats[0] = 0; // walk left (neg) and right (pos)
     this.floats[1] = 0; // turn left (neg) and  right (pos)
@@ -49,7 +49,7 @@ export class Go1MQTT extends EventEmitter {
 
     // Handle messages that come from various topics
     this.client.on("message", (topic, message) => {
-      this.emit("go1StateChange", this.go1State);
+      this.go1.publishState(this.go1State);
       messageHandler(topic, message, this.go1State);
     });
   };
