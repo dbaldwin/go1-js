@@ -1,14 +1,35 @@
 import { Go1 } from "../src/go1";
+import { Go1State } from "../src/mqtt/go1-state";
 
-async function run() {
-  let dog = new Go1();
+let dog: Go1;
 
+function handleBattery(state: Go1State): void {
+  const batt: number = state.bms.soc;
+
+  console.log(`battery is at ${batt}%`);
+
+  if (batt >= 75) {
+    dog.setLedColor(0, 255, 0); // green
+  } else if (batt >= 50 && batt < 75) {
+    dog.setLedColor(255, 127, 0); // orange
+  } else if (batt < 25) {
+    dog.setLedColor(255, 0, 0); // red
+  }
+}
+
+async function main() {
+  dog = new Go1();
+
+  dog.mqtt.on("go1StateChange", (state) => {
+    handleBattery(state);
+  });
+
+  // Normally you would navigate Go1 around
+  // this infinite loop is just to demonstrate
+  // the battery handler above
   while (true) {
-    const go1State = dog.getState();
-    console.log(go1State.bms.soc);
-    console.log(go1State.robot.distanceWarning);
     await dog.wait(500);
   }
 }
 
-run();
+main();
