@@ -1,4 +1,4 @@
-import { Go1 } from "../src/go1";
+import { Go1, Go1Mode } from "../src/go1";
 import { Go1State } from "../src/mqtt/go1-state";
 
 let dog: Go1;
@@ -28,7 +28,10 @@ async function main() {
   // this infinite loop is just to demonstrate
   // the battery handler above
   while (true) {
-    await dog.wait(500);
+    dog.setMode(Go1Mode.standDown);
+    await dog.wait(2000);
+    dog.setMode(Go1Mode.standUp);
+    await dog.wait(2000);
   }
 }
 
