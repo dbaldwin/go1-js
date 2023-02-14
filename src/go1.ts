@@ -199,7 +199,7 @@ export class Go1 extends EventEmitter {
    * @param lengthOfTime - Length of time for movement in milliseconds
    */
   lookDown = async (speed: number, lengthOfTime: number) => {
-    this.mqtt.updateSpeed(0, 0, speed * -1, 0);
+    this.mqtt.updateSpeed(0, 0, speed, 0);
     await this.mqtt.sendMovementCommand(lengthOfTime);
   };
 
@@ -210,8 +210,16 @@ export class Go1 extends EventEmitter {
    * @param lengthOfTime - Length of time for movement in milliseconds
    */
   lookUp = async (speed: number, lengthOfTime: number) => {
-    this.mqtt.updateSpeed(0, 0, speed, 0);
+    this.mqtt.updateSpeed(0, 0, speed * -1, 0);
     await this.mqtt.sendMovementCommand(lengthOfTime);
+  };
+
+  /**
+   * Helper function to clear out previous queued movements
+   */
+  resetBody = async () => {
+    this.mqtt.updateSpeed(0, 0, 0, 0);
+    await this.mqtt.sendMovementCommand(1000);
   };
 
   /**
