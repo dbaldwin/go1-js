@@ -19,6 +19,7 @@ function distanceToWarning(distance: number) {
 
 const receivers: Receivers = {
   "firmware/version": (data, message, dataView) => {
+    //console.log(dataView);
     data.robot.temps = data.robot.temps.map((v, i) => dataView.getUint8(i + 8));
     if (dataView.byteLength > 28) {
       data.robot.mode = dataView.getUint8(28);

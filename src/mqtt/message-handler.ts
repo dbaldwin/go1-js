@@ -29,5 +29,5 @@ export default function messageHandler(
   );
   const receiver = messageReceivers[msgTopic];
   if (receiver) receiver(data, message, dataView);
-  else console.log(message);
+  //else console.log(message);
 }

@@ -12,6 +12,7 @@ type Receivers = {
 const receivers: Receivers = {
   "bms/state": (data, message, dataView) => {
     const uint8s = new Uint8Array(message);
+    //console.log(uint8s);
     data.bms.version = uint8s[0] + "." + uint8s[1];
     data.bms.status = uint8s[2];
     data.bms.soc = uint8s[3];
