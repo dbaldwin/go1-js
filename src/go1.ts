@@ -127,6 +127,31 @@ export class Go1 extends EventEmitter {
   };
 
   /**
+   * Raw pose method for accessing all of the axes together. Requires stand mode to be set first.
+   *
+   * @param leanLeftRightAmount - A value from -1 to 1
+   * @param twistLeftRightAmount - A value from -1 to 1
+   * @param lookUpDownAmount - A value from -1 to 1 (only for stand mode)
+   * @param extendSquatAmount - A value from -1 to 1
+   * @param lengthOfTime - Length of time for movement in milliseconds
+   */
+  pose = async (
+    leanLeftRightAmount: number,
+    twistLeftRightAmount: number,
+    lookUpDownAmount: number,
+    extendSquatAmount: number,
+    lengthOfTime: number
+  ) => {
+    this.mqtt.updateSpeed(
+      leanLeftRightAmount,
+      twistLeftRightAmount,
+      lookUpDownAmount,
+      extendSquatAmount
+    );
+    await this.mqtt.sendMovementCommand(lengthOfTime);
+  };
+
+  /**
    * Extend up - requires setMode(Go1Mode.stand) to be set
    *
    * @param speed - A value from 0 to 1
