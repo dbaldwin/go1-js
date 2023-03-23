@@ -1,23 +1,31 @@
-import * as mqtt from "mqtt";
+import { connect, MqttClient, IClientOptions } from "mqtt";
 import { Go1State, getGo1StateCopy } from "./go1-state";
 import { Go1, Go1Mode } from "../go1";
 import messageHandler from "./message-handler";
 
 export class Go1MQTT {
   go1: Go1;
-  client: mqtt.MqttClient | null;
+  client: MqttClient | null;
   floats: Float32Array = new Float32Array(4);
-  endpoint: string = "mqtt://192.168.12.1";
-  //endpoint: string = "mqtt://192.168.86.41";
   connected: boolean = false;
   movementTopic: string;
   ledTopic: string;
   modeTopic: string;
   publishFrequency: number;
   go1State: Go1State;
+  iClientOptions: IClientOptions;
 
-  constructor(go1: Go1) {
+  readonly defaultIClientOptions: IClientOptions = {
+    port: 1883,
+    host: "192.168.12.1",
+    clientId: Math.random().toString(16).substring(2, 8),
+    keepalive: 5,
+    protocol: "mqtt",
+  };
+
+  constructor(go1: Go1, iClientOptions?: IClientOptions) {
     this.go1 = go1;
+    this.iClientOptions = { ...this.defaultIClientOptions, ...iClientOptions };
     this.client = null;
     this.floats[0] = 0; // walk left (neg) and right (pos)
     this.floats[1] = 0; // turn left (neg) and  right (pos)
@@ -33,10 +41,7 @@ export class Go1MQTT {
   connect = () => {
     console.log("connecting");
 
-    this.client = mqtt.connect(this.endpoint, {
-      clientId: Math.random().toString(16).substring(2, 8),
-      keepalive: 5,
-    });
+    this.client = connect(this.iClientOptions);
 
     this.client.on("connect", () => {
       console.log("connected");
