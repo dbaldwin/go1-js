@@ -1,6 +1,7 @@
 import { EventEmitter } from "events";
 import { Go1MQTT } from "./mqtt/go1-mqtt";
 import { Go1State, getGo1StateCopy } from "./mqtt/go1-state";
+import { IClientOptions } from "mqtt";
 
 export enum Go1Mode {
   dance1 = "dance1",
@@ -20,9 +21,9 @@ export class Go1 extends EventEmitter {
   mqtt: Go1MQTT;
   go1State: Go1State;
 
-  constructor() {
+  constructor(iClientOptions?: IClientOptions) {
     super();
-    this.mqtt = new Go1MQTT(this);
+    this.mqtt = new Go1MQTT(this, iClientOptions);
     this.mqtt.connect();
     this.mqtt.subscribe();
     this.go1State = getGo1StateCopy();
