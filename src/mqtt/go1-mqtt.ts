@@ -40,16 +40,26 @@ export class Go1MQTT {
 
   connect = () => {
     console.log("connecting");
-
     this.client = connect(this.iClientOptions);
 
     this.client.on("connect", () => {
       console.log("connected");
       this.connected = true;
+      this.go1.publishConnectionStatus(true);
     });
 
     this.client.on("close", () => {
       this.connected = false;
+    });
+
+    this.client.on("disconnect", () => {
+      console.log("disconnected");
+      this.go1.publishConnectionStatus(false);
+    });
+
+    this.client.on("offline", () => {
+      console.log("disconnected");
+      this.go1.publishConnectionStatus(false);
     });
 
     // Handle messages that come from various topics
