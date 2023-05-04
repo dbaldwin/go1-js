@@ -24,17 +24,27 @@ export class Go1 extends EventEmitter {
   constructor(iClientOptions?: IClientOptions) {
     super();
     this.mqtt = new Go1MQTT(this, iClientOptions);
-    this.mqtt.connect();
-    this.mqtt.subscribe();
     this.go1State = getGo1StateCopy();
   }
 
+  init = () => {
+    this.mqtt.connect();
+    this.mqtt.subscribe();
+  };
   /**
    *
    * @param state
    */
   publishState = (state: Go1State) => {
     this.emit("go1StateChange", state);
+  };
+
+  /**
+   *
+   * @param connected
+   */
+  publishConnectionStatus = (connected: boolean) => {
+    this.emit("go1ConnectionStatus", connected);
   };
 
   /**
