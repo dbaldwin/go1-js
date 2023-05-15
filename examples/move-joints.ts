@@ -1,6 +1,7 @@
 import { Go1, Go1Mode } from "../src/go1";
 
 let dog = new Go1();
+dog.init();
 dog.setMode(Go1Mode.stand);
 
 async function run() {
