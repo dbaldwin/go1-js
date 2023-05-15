@@ -20,6 +20,7 @@ function handleCollisionDetection(state: Go1State): void {
 
 async function main() {
   dog = new Go1();
+  dog.init();
   dog.setLedColor(0, 255, 0);
 
   dog.on("go1StateChange", (state) => {

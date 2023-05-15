@@ -4,6 +4,7 @@ let dog: Go1;
 
 async function main() {
   dog = new Go1();
+  dog.init();
 
   await dog.wait(3000);
 
